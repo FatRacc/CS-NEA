@@ -333,10 +333,7 @@ def mainPlayerInventory(playerInventory):
 #Mouse x-y coordinate grabber
 #===============================================================================
 def getMouseXY():
-    x = pygame.mouse.get_pos(x)
-    y = pygame.mouse.get_pos(y)
-    x1 = x
-    y1 = y
+    x1,y1 = pygame.mouse.get_pos()
     return x1,y1
 #===============================================================================
 #Factory Building Placement
@@ -345,7 +342,6 @@ buildingCoordinates = [] #initialises the list
 
 def buildingPlacement():
     print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
-    time.sleep(1)
     getMouseXY()
     
     x_over = x1 % 32 
