@@ -17,6 +17,7 @@ import time
 import random
 import math
 import re
+import time
 
 #===============================================================================
 #parameters
@@ -197,6 +198,7 @@ app.mainloop()
 #charchter render and movement
 #===============================================================================
 def player_render():
+    time.sleep(1)
     x, y = 0, 0  #sets charchter position
     while True:
         
@@ -232,9 +234,11 @@ def player_render():
 
         left, middle, right = pygame.mouse.get_pressed()
         if left:
+            time.sleep(1)
             buildingPlacement() #allows factory building to be placed
         if right:
-            beltPlacement()
+            time.sleep(1)
+            beltPlacement() #allows belt to be placed
 
         
 
@@ -326,21 +330,30 @@ def mainPlayerInventory(playerInventory):
 
 
 #===============================================================================
+#Mouse x-y coordinate grabber
+#===============================================================================
+def getMouseXY():
+    x = pygame.mouse.get_pos(x)
+    y = pygame.mouse.get_pos(y)
+    x1 = x
+    y1 = y
+    return x1,y1
+#===============================================================================
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
 
 def buildingPlacement():
     print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
-    pygame.mouse.get_pos(x, y)
-    print(pygame.mouse.get_pos(x, y))# mouse x+y pos coordinates obtained
-
-    x_over = x % 32 
+    time.sleep(1)
+    getMouseXY()
+    
+    x_over = x1 % 32 
     print(x_over)
-    x_building_pos = x - x_over
-    y_over = y % 32
+    x_building_pos = x1 - x_over
+    y_over = y1 % 32
     print(y_over)
-    y_building_pos = y - y_over
+    y_building_pos = y1 - y_over
 
     print("Y-Position = ", y_building_pos)
     print("X-Position = ", x_building_pos)
@@ -357,7 +370,7 @@ def buildingPlacement():
             buildingCoordinates.append(y_building_pos)
 
     print("Buildings placed at ", buildingCoordinates)
-    
+    pygame.display.flip()
 
 
 #===============================================================================
