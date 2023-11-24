@@ -34,8 +34,8 @@ colorDark = (100,100,100)
 smallfont = pygame.font.SysFont('Corbel',35)
 clock = pygame.time.Clock()
 run = True
-x = 20
-y = 20
+x_1 = 20
+y_1 = 20
 width = 40
 height = 60
 vel = 2.87
@@ -139,7 +139,7 @@ def main_menu():
 
 
       MENU_TEXT = get_font(100).render("FACTORY GAME", True, "#b68f40")
-      MENU_RECT = MENU_TEXT.get_rect(center=(960, 100))
+      MENU_RECT = MENU_TEXT.get_rect(center=(675, 100))
 
 
 
@@ -198,7 +198,7 @@ app.mainloop()
 #charchter render and movement
 #===============================================================================
 def player_render():
-    time.sleep(1)
+    time.sleep(0.1)
     x, y = 0, 0  #sets charchter position
     while True:
         
@@ -342,30 +342,33 @@ buildingCoordinates = [] #initialises the list
 
 def buildingPlacement():
     print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
-    getMouseXY()
-    
+    #getMouseXY()
+    x1,y1 = pygame.mouse.get_pos()
     x_over = x1 % 32 
-    print(x_over)
     x_building_pos = x1 - x_over
     y_over = y1 % 32
-    print(y_over)
     y_building_pos = y1 - y_over
 
     print("Y-Position = ", y_building_pos)
     print("X-Position = ", x_building_pos)
 
-    coordinates_to_search = [y_building_pos, x_building_pos]
+    print("Currrent Building Locations: ", buildingCoordinates)
 
-    for value in coordinates_to_search:
-        if value in buildingCoordinates:
-            print("Building already here!")
-        else:
+    if y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates:
+        print("Building already here!")
+    else:
+        buildingCoordinates.append(x_building_pos)
+        buildingCoordinates.append(y_building_pos)
+        print("Buildings placed at ", buildingCoordinates)
+        
+        showBuilding = True
+        while showBuilding:
             building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
-            screen.blit(building, (x, y))
-            buildingCoordinates.append(x_building_pos)
-            buildingCoordinates.append(y_building_pos)
+            screen.blit(building, (x_building_pos, y_building_pos))
+            pygame.display.flip()
+        
 
-    print("Buildings placed at ", buildingCoordinates)
+    
     pygame.display.flip()
 
 
