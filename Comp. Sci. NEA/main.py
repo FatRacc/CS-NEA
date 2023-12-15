@@ -209,7 +209,7 @@ def register(): #registration window
     password_entry = Entry(register_screen, textvariable=password, show='*')
     password_entry.pack()
     Label(register_screen, text="").pack()
-    Button(register_screen, text="Register", width=10, height=1, bg="blue", command = register_user).pack()
+    button(register_screen, text="Register", width=10, height=1, bg="blue", command = register_user).pack()
 
 def login(): #login window
     global login_screen
@@ -236,7 +236,7 @@ def login(): #login window
     password_login_entry = Entry(login_screen, textvariable=password_verify, show= '*')
     password_login_entry.pack()
     Label(login_screen, text="").pack()
-    Button(login_screen, text="Login", width=10, height=1, command = login_verify).pack()
+    button(login_screen, text="Login", width=10, height=1, command = login_verify).pack()
 
 def register_user(): #event on register button
     username_info = username.get()
@@ -279,7 +279,7 @@ def login_sucess():
     login_success_screen.title("Success")
     login_success_screen.geometry("150x100")
     Label(login_success_screen, text="Login Success").pack()
-    Button(login_success_screen, text="OK", command=delete_login_success).pack()
+    button(login_success_screen, text="OK", command=delete_login_success).pack()
     player_render()
 
 # Designing popup for login invalid password
@@ -290,7 +290,7 @@ def password_not_recognised():
     password_not_recog_screen.title("Success")
     password_not_recog_screen.geometry("150x100")
     Label(password_not_recog_screen, text="Invalid Password ").pack()
-    Button(password_not_recog_screen, text="OK", command=delete_password_not_recognised).pack()
+    button(password_not_recog_screen, text="OK", command=delete_password_not_recognised).pack()
  
 # Designing popup for user not found
  
@@ -300,7 +300,7 @@ def user_not_found():
     user_not_found_screen.title("Success")
     user_not_found_screen.geometry("150x100")
     Label(user_not_found_screen, text="User Not Found").pack()
-    Button(user_not_found_screen, text="OK", command=delete_user_not_found_screen).pack()
+    button(user_not_found_screen, text="OK", command=delete_user_not_found_screen).pack()
  
 # Deleting popups
  
@@ -318,18 +318,39 @@ def delete_user_not_found_screen():
  
 # Designing Main(first) window
  
+from tkinter import Tk, Label
+
 def main_account_screen():
     global main_screen
     main_screen = Tk()
     main_screen.geometry("300x250")
     main_screen.title("Account Login")
+    
     Label(text="Select Your Choice", bg="blue", width="300", height="2", font=("Calibri", 13)).pack()
     Label(text="").pack()
-    Button(text="Login", height="2", width="30", command = login).pack()
+    
+    Login_button = button(main_screen, text="Login", height="2", width="30", command=login)
+    Login_button.pack()
+    
     Label(text="").pack()
-    Button(text="Register", height="2", width="30", command=register).pack()
- 
+    
+    Register_button = button(main_screen, text="Register", height="2", width="30", command=register)
+    Register_button.pack()
+
     main_screen.mainloop()
+
+#===============================================================================
+#button class
+#===============================================================================
+
+class button():
+    def __init__(self, master, text, height, width, command):
+        self.master = master
+        self.text = text
+        self.height = height
+        self.width = width
+        self.command = command
+        self.button = tk.Button(self.master, text=self.text, height=self.height, width=self.width, command=self.command)
 
 
 #===============================================================================
@@ -522,7 +543,6 @@ def buildingPlacement():
 def buildingFunction(x_building_pos, y_building_pos):
     window = tk.Tk()
     window.title("Building Function")
-    choice = Button()
     
     def button_click(button_number):
         print(f"button {button_number} clicked!")
