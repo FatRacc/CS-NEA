@@ -329,12 +329,12 @@ def main_account_screen():
     Label(text="Select Your Choice", bg="blue", width="300", height="2", font=("Calibri", 13)).pack()
     Label(text="").pack()
     
-    Login_button = button(main_screen, text="Login", height="2", width="30", command=login)
+    Login_button = MyButton(main_screen, text="Login", height="2", width="30", command=login)
     Login_button.pack()
     
     Label(text="").pack()
     
-    Register_button = button(main_screen, text="Register", height="2", width="30", command=register)
+    Register_button = MyButton(main_screen, text="Register", height="2", width="30", command=register)
     Register_button.pack()
 
     main_screen.mainloop()
@@ -343,7 +343,7 @@ def main_account_screen():
 #button class
 #===============================================================================
 
-class button():
+class MyButton():
     def __init__(self, master, text, height, width, command):
         self.master = master
         self.text = text
