@@ -9,10 +9,13 @@
 import pygame
 from pygame.locals import *
 import sys
+import tkinter
+from tkinter import messagebox
 from tkinter.simpledialog import askstring
 from tkinter import *
 from tkinter import Tk, Label
 from button import Button
+import sqlite3
 import os
 import time
 import random
@@ -27,8 +30,7 @@ pygame.init() #initialising pygame
 
 fps = 60
 fpsClock = pygame.time.Clock()
-screen = pygame.display.set_mode((1280, 720
-))
+screen = pygame.display.set_mode((1280, 720))
 color = (255,255,255)
 colorLight = (170,170,170)
 colorDark = (100,100,100)
@@ -76,7 +78,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 
 def play():
-    main_account_screen()
+    player_render()
 
 
 
@@ -183,187 +185,8 @@ def main_menu():
       pygame.display.update()
 
 
-#===============================================================================
-# Login system - https://github.com/codefirstio/Tkinter-login-form/blob/main/main.py
-#===============================================================================
-def register(): #registration window
-    global register_screen
-    register_screen = Toplevel(main_screen)
-    register_screen.title("Register")
-    register_screen.geometry("300x250")
-
-    global username
-    global password
-    global username_entry
-    global password_entry
-    username = StringVar()
-    password = StringVar()
-
-    Label(register_screen, text="Please enter details below", bg="blue").pack()
-    Label(register_screen, text="").pack()
-    username_lable = Label(register_screen, text="Username * ")
-    username_lable.pack()
-    username_entry = Entry(register_screen, textvariable=username)
-    username_entry.pack()
-    password_lable = Label(register_screen, text="Password * ")
-    password_lable.pack()
-    password_entry = Entry(register_screen, textvariable=password, show='*')
-    password_entry.pack()
-    Label(register_screen, text="").pack()
-    button(register_screen, text="Register", width=10, height=1, bg="blue", command = register_user).pack()
-
-def login(): #login window
-    global login_screen
-    login_screen = Toplevel(main_screen)
-    login_screen.title("Login")
-    login_screen.geometry("300x250")
-    Label(login_screen, text="Please enter details below to login").pack()
-    Label(login_screen, text="").pack()
-
-    global username_verify
-    global password_verify
-
-    username_verify = StringVar()
-    password_verify = StringVar()
-
-    global username_login_entry
-    global password_login_entry
-
-    Label(login_screen, text="Username * ").pack()
-    username_login_entry = Entry(login_screen, textvariable=username_verify)
-    username_login_entry.pack()
-    Label(login_screen, text="").pack()
-    Label(login_screen, text="Password * ").pack()
-    password_login_entry = Entry(login_screen, textvariable=password_verify, show= '*')
-    password_login_entry.pack()
-    Label(login_screen, text="").pack()
-    button(login_screen, text="Login", width=10, height=1, command = login_verify).pack()
-
-def register_user(): #event on register button
-    username_info = username.get()
-    password_info = password.get()
-
-    file = open(username_info, "w")
-    file.write(username_info + "\n")
-    file.write(password_info)
-    file.close()
-
-    username_entry.delete(0, END)
-    password_entry.delete(0, END)
-
-    Label(register_screen, text="Registration Success", fg="green", font=("calibri", 11)).pack()
-
-def login_verify():
-    username1 = username_verify.get()
-    password1 = password_verify.get()
-    username_login_entry.delete(0, END)
-    password_login_entry.delete(0, END)
- 
-    list_of_files = os.listdir()
-    if username1 in list_of_files:
-        file1 = open(username1, "r")
-        verify = file1.read().splitlines()
-        if password1 in verify:
-            login_sucess()
- 
-        else:
-            password_not_recognised()
- 
-    else:
-        user_not_found()
- 
-# Designing popup for login success
- 
-def login_sucess():
-    global login_success_screen
-    login_success_screen = Toplevel(login_screen)
-    login_success_screen.title("Success")
-    login_success_screen.geometry("150x100")
-    Label(login_success_screen, text="Login Success").pack()
-    button(login_success_screen, text="OK", command=delete_login_success).pack()
-    player_render()
-
-# Designing popup for login invalid password
- 
-def password_not_recognised():
-    global password_not_recog_screen
-    password_not_recog_screen = Toplevel(login_screen)
-    password_not_recog_screen.title("Success")
-    password_not_recog_screen.geometry("150x100")
-    Label(password_not_recog_screen, text="Invalid Password ").pack()
-    button(password_not_recog_screen, text="OK", command=delete_password_not_recognised).pack()
- 
-# Designing popup for user not found
- 
-def user_not_found():
-    global user_not_found_screen
-    user_not_found_screen = Toplevel(login_screen)
-    user_not_found_screen.title("Success")
-    user_not_found_screen.geometry("150x100")
-    Label(user_not_found_screen, text="User Not Found").pack()
-    button(user_not_found_screen, text="OK", command=delete_user_not_found_screen).pack()
- 
-# Deleting popups
- 
-def delete_login_success():
-    login_success_screen.destroy()
- 
- 
-def delete_password_not_recognised():
-    password_not_recog_screen.destroy()
- 
- 
-def delete_user_not_found_screen():
-    user_not_found_screen.destroy()
- 
- 
-# Designing Main(first) window
- 
 
 
-def main_account_screen():
-    global main_screen
-    main_screen = Tk()
-    main_screen.geometry("300x250")
-    main_screen.title("Account Login")
-    
-    Label(text="Select Your Choice", bg="blue", width="300", height="2", font=("Calibri", 13)).pack()
-    Label(text="").pack()
-    
-    Login_button = MyButton(main_screen, text="Login", height="2", width="30", command=login)
-    Login_button.pack()
-    
-    Label(text="").pack()
-    
-    Register_button = MyButton(main_screen, text="Register", height="2", width="30", command=register)
-    Register_button.pack()
-
-    main_screen.mainloop()
-
-#===============================================================================
-#button class
-#===============================================================================
-
-class MyButton():
-    def __init__(self, master, text, height, width, command):
-        self.master = master
-        self.text = text
-        self.height = height
-        self.width = width
-        self.command = command
-        self.button = tk.Button(self.master, text=self.text, height=self.height, width=self.width, command=self.command)
-
-
-#===============================================================================
-#tkinter text input window class
-#===============================================================================
-import tkinter as tk
-class App(tk.Tk):
-    def __init__(self):
-        super().__init__()
-
-app = App()
-app.mainloop()
 #===============================================================================
 #charchter render and movement
 #===============================================================================
@@ -418,6 +241,17 @@ def player_render():
         mainPlayerInventory(playerInventory) #initialises the player inventory
         pygame.display.flip()
         #camera_follow()
+
+#===============================================================================
+#tkinter text input window class
+#===============================================================================
+import tkinter as tk
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+
+
 
 #===============================================================================
 #checkered background
@@ -553,11 +387,101 @@ def buildingFunction(x_building_pos, y_building_pos):
 def beltPlacement():
     print("Belt Placed")#detects if mouse was clicked and displays a message if so
 
+
+#===============================================================================
+# Login system
+#===============================================================================
+window = tk.Tk()
+window.title("Login form")
+window.geometry('340x440')
+window.configure(bg='#333333')
+
+
+
+def login():
+    master_username = "test"
+    master_password = "test"
+    if username_entry.get()==master_username and password_entry.get()==master_password:
+        messagebox.showinfo(title="Login Success", message="You successfully logged in.")
+        main_menu()
+    else:
+        messagebox.showerror(title="Error", message="Invalid login.")
+
+frame = tkinter.Frame(bg='#333333')
+
+
+# Creating widgets
+login_label = tk.Label(
+    frame, text="Login", bg='#333333', fg="#FF3399", font=("Arial", 30))
+username_label = tk.Label(
+    frame, text="Username", bg='#333333', fg="#FFFFFF", font=("Arial", 16))
+username_entry = tk.Entry(frame, font=("Arial", 16))
+password_entry = tk.Entry(frame, show="*", font=("Arial", 16))
+password_label = tk.Label(
+    frame, text="Password", bg='#333333', fg="#FFFFFF", font=("Arial", 16))
+login_button = tk.Button(
+    frame, text="Login", bg="#FF3399", fg="#FFFFFF", font=("Arial", 16), command=login)
+
+# Placing widgets on the screen
+login_label.grid(row=0, column=0, columnspan=2, sticky="news", pady=40)
+username_label.grid(row=1, column=0)
+username_entry.grid(row=1, column=1, pady=20)
+password_label.grid(row=2, column=0)
+password_entry.grid(row=2, column=1, pady=20)
+login_button.grid(row=3, column=0, columnspan=2, pady=30)
+
+frame.pack()
+
+window.mainloop()
+#===============================================================================
+#goofy ahh database
+#===============================================================================
+#connect main database
+def databaseConnect():
+    conn = sqlite3.connect('main.db')
+    curs = conn.cursor()
+
+    curs.execute("""CREAE TABLE IF NOT EXISTS logindata (
+                    username text,
+                    password text,
+                    primary key(username)
+                    )""")
+
+#===============================================================================
+#placeholder
+#===============================================================================
+
+
+
+#===============================================================================
+#placeholder
+#===============================================================================
+
+
+
+#===============================================================================
+#placeholder
+#===============================================================================
+
+
+
+#===============================================================================
+#placeholder
+#===============================================================================
+
+
+
+#===============================================================================
+#placeholder
+#===============================================================================
+
+
+
 #===============================================================================
 #Main function
 #===============================================================================
 def program_start():
-    main_menu()#calls the main menu
+    login()
     pygame.quit()#checks if the program is closed down or quit
 
 
