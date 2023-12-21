@@ -1,6 +1,6 @@
 #pip3 install pygame -pre
 #redo tasks 1-5 of the NEA to ensure continuity.
-
+#https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
 
 #===============================================================================
@@ -11,6 +11,7 @@ from pygame.locals import *
 import sys
 from tkinter.simpledialog import askstring
 from tkinter import *
+from tkinter import Tk, Label
 from button import Button
 import os
 import time
@@ -183,7 +184,7 @@ def main_menu():
 
 
 #===============================================================================
-# Login system
+# Login system - https://github.com/codefirstio/Tkinter-login-form/blob/main/main.py
 #===============================================================================
 def register(): #registration window
     global register_screen
@@ -318,7 +319,7 @@ def delete_user_not_found_screen():
  
 # Designing Main(first) window
  
-from tkinter import Tk, Label
+
 
 def main_account_screen():
     global main_screen
