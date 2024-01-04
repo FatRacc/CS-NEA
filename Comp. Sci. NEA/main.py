@@ -30,7 +30,7 @@ pygame.init() #initialising pygame
 
 fps = 60
 fpsClock = pygame.time.Clock()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 704))
 color = (255,255,255)
 colorLight = (170,170,170)
 colorDark = (100,100,100)
@@ -201,6 +201,14 @@ def player_render():
 
         keys = pygame.key.get_pressed() #checks the keys being pressed 
         
+        checkered_background()
+        charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
+        screen.blit(charachter, (x, y)) #displays the image of the player
+        mainPlayerInventory(playerInventory) #initialises the player inventory
+        pygame.display.flip()
+        #camera_follow()
+        
+        
         if keys[pygame.K_a]:
             x -= vel  #player velocity set
             camera_follow()
@@ -225,22 +233,56 @@ def player_render():
             print("returned to main menu") #returns to the main menu
             main_menu()
 
+        
         left, middle, right = pygame.mouse.get_pressed()
         if left:
-            time.sleep(0.3)
-            buildingPlacement() #allows factory building to be placed
+            print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
+            #getMouseXY()
+            x1,y1 = pygame.mouse.get_pos()
+            x_over = x1 % 32 
+            x_building_pos = x1 - x_over
+            y_over = y1 % 32
+            y_building_pos = y1 - y_over
+
+            print("Y-Position = ", y_building_pos)
+            print("X-Position = ", x_building_pos)
+
+            print("Currrent Building Locations: ", buildingCoordinates)
+
+            if y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates:
+                print("Building already here!")
+            else:
+                buildingCoordinates.append(x_building_pos)
+                buildingCoordinates.append(y_building_pos)
+
+                building_function = askFunction()
+                
+
+
+                if building_function == "assembler":
+                    building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
+                    screen.blit(building, (x_building_pos, y_building_pos))
+                    pygame.display.flip()
+                    
+                        
+        
+                elif building_function == "miner":
+                    miner = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
+                    screen.blit(miner, (x_building_pos, y_building_pos))
+                    pygame.display.flip()
+                    
+
+                else:
+                    print("Invalid entry!")
+                    askFunction()
+
         if right:
             time.sleep(0.3)
             beltPlacement() #allows belt to be placed
 
-        
-
-        checkered_background()
-        charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
-        screen.blit(charachter, (x, y)) #displays the image of the player
-        mainPlayerInventory(playerInventory) #initialises the player inventory
         pygame.display.flip()
-        #camera_follow()
+
+        
 
 #===============================================================================
 #tkinter text input window class
@@ -339,53 +381,66 @@ def mainPlayerInventory(playerInventory):
 def getMouseXY():
     x1,y1 = pygame.mouse.get_pos()
     return x1,y1
+
+
 #===============================================================================
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
 
-def buildingPlacement():
-    print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
-    #getMouseXY()
-    x1,y1 = pygame.mouse.get_pos()
-    x_over = x1 % 32 
-    x_building_pos = x1 - x_over
-    y_over = y1 % 32
-    y_building_pos = y1 - y_over
+#def assemblerPlace():
 
-    print("Y-Position = ", y_building_pos)
-    print("X-Position = ", x_building_pos)
 
-    print("Currrent Building Locations: ", buildingCoordinates)
 
-    if y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates:
-        print("Building already here!")
-    else:
-        buildingCoordinates.append(x_building_pos)
-        buildingCoordinates.append(y_building_pos)
-        buildingFunction(x_building_pos, y_building_pos)
-        print("Buildings placed at ", buildingCoordinates)
-        
-        
-        building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
-        screen.blit(building, (x_building_pos, y_building_pos))
-        pygame.display.flip()
-        
+#def minerPlace():
+
 
 #===============================================================================
-#Factory Building function window
+#ask function
 #===============================================================================
-def buildingFunction(x_building_pos, y_building_pos):
-    window = tk.Tk()
-    window.title("Building Function")
-    
-    def button_click(button_number):
-        print(f"button {button_number} clicked!")
+def askFunction():
+    building_function = askstring("Input", "Would you like this building to be an 'assembler' or a 'miner'")
+    return building_function
+
+
 #===============================================================================
 #Factory Belt Placement
 #===============================================================================
 def beltPlacement():
     print("Belt Placed")#detects if mouse was clicked and displays a message if so
+
+#===============================================================================
+#goofy ahh database
+#===============================================================================
+#connect main database
+    
+conn = sqlite3.connect('main.db')
+curs = conn.cursor()
+
+def databaseConnect():
+
+    curs.execute("""CREATE TABLE IF NOT EXISTS logindata (
+                    username text,
+                    password text,
+                    primary key(username)
+                    )""")
+    
+def databaseAppendMain():
+
+    curs.execute("INSERT INTO logindata VALUES ('test','test')")
+
+
+
+def databaseSearch(field):
+
+    curs.execute("SELECT * FROM logindata")
+    
+    myresult = curs.fetchall()
+    
+    for x in myresult:
+        if x == field:
+            return x
+
 
 
 #===============================================================================
@@ -399,9 +454,15 @@ window.configure(bg='#333333')
 
 
 def login():
-    master_username = "test"
-    master_password = "test"
+    databaseConnect()
+    databaseAppendMain()
+    
+    master_username = "muser"
+    master_password = "mpass"
     if username_entry.get()==master_username and password_entry.get()==master_password:
+        messagebox.showinfo(title="Login Success", message="You successfully logged in.")
+        main_menu()
+    elif username_entry.get() == databaseSearch(username_entry.get()) and password_entry.get() == databaseSearch(password_entry.get()):
         messagebox.showinfo(title="Login Success", message="You successfully logged in.")
         main_menu()
     else:
@@ -433,19 +494,6 @@ login_button.grid(row=3, column=0, columnspan=2, pady=30)
 frame.pack()
 
 window.mainloop()
-#===============================================================================
-#goofy ahh database
-#===============================================================================
-#connect main database
-def databaseConnect():
-    conn = sqlite3.connect('main.db')
-    curs = conn.cursor()
-
-    curs.execute("""CREAE TABLE IF NOT EXISTS logindata (
-                    username text,
-                    password text,
-                    primary key(username)
-                    )""")
 
 #===============================================================================
 #placeholder
@@ -488,6 +536,4 @@ def program_start():
 #===============================================================================
 #Main While loop - LEAVE AS IS
 #===============================================================================
-while run:
-  program_start()#start function to avoid recusrion errors
-
+program_start()#start function to avoid recusrion errors
