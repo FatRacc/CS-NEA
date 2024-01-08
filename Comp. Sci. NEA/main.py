@@ -248,8 +248,9 @@ def player_render():
             print("X-Position = ", x_building_pos)
 
             print("Currrent Building Locations: ", buildingCoordinates)
+            print("current Belt Locations = ", beltCoordinates)
 
-            if y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates:
+            if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates) or (y_building_pos in beltCoordinates and x_building_pos in beltCoordinates):
                 print("Building already here!")
             else:
                 buildingCoordinates.append(x_building_pos)
@@ -279,6 +280,10 @@ def player_render():
         if right:
             time.sleep(0.3)
             beltPlacement() #allows belt to be placed
+
+        if middle:
+            time.sleep(0.3)
+            removeBuildingOrBelt()
 
         pygame.display.flip()
 
@@ -387,13 +392,7 @@ def getMouseXY():
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
-
-#def assemblerPlace():
-
-
-
-#def minerPlace():
-
+beltCoordinates = []
 
 #===============================================================================
 #ask function
@@ -407,7 +406,28 @@ def askFunction():
 #Factory Belt Placement
 #===============================================================================
 def beltPlacement():
-    print("Belt Placed")#detects if mouse was clicked and displays a message if so
+    #getMouseXY()
+    x2,y2 = pygame.mouse.get_pos()
+    x_over = x2 % 32 
+    x_belt_pos = x2 - x_over
+    y_over = y2 % 32
+    y_belt_pos = y2 - y_over
+
+    print("Y-Position = ", y_belt_pos)
+    print("X-Position = ", x_belt_pos)
+
+    print("Currrent Building Locations: ", buildingCoordinates)
+    print("Current Belt Coordinates: ", beltCoordinates)
+
+    if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates) or (y_belt_pos in beltCoordinates and x_belt_pos in beltCoordinates):
+        print("Building already here!")
+    else:
+        beltCoordinates.append(x_belt_pos)
+        beltCoordinates.append(y_belt_pos)
+
+        belt = pygame.image.load(os.path.join("assets", "belt_tier_1.PNG"))
+        screen.blit(belt, (x_belt_pos, y_belt_pos))
+        pygame.display.flip()
 
 #===============================================================================
 #goofy ahh database
@@ -496,31 +516,34 @@ frame.pack()
 window.mainloop()
 
 #===============================================================================
-#placeholder
+#remove building or belt
+#===============================================================================
+def removeBuildingOrBelt():
+    #getMouseXY()
+    x3,y3 = pygame.mouse.get_pos()
+    x_over = x3 % 32 
+    x_thing_pos = x3 - x_over
+    y_over = y3 % 32
+    y_thing_pos = y3 - y_over
+
+    print("Y-Position to be removed = ", y_thing_pos)
+    print("X-Position to be removed= ", x_thing_pos)
+
+    buildingCoordinates.remove(x_thing_pos)
+    beltCoordinates.remove(x_thing_pos)
+    print("X Co-ordinate removed")
+    buildingCoordinates.remove(y_thing_pos)
+    beltCoordinates.remove(y_thing_pos)
+    print("Both Co-ordinates removed successfuly")
+
+#===============================================================================
+#djikstras shortest path?
 #===============================================================================
 
 
 
 #===============================================================================
-#placeholder
-#===============================================================================
-
-
-
-#===============================================================================
-#placeholder
-#===============================================================================
-
-
-
-#===============================================================================
-#placeholder
-#===============================================================================
-
-
-
-#===============================================================================
-#placeholder
+#building connectivity
 #===============================================================================
 
 
