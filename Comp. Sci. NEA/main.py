@@ -1,7 +1,11 @@
 #pip3 install pygame -pre
-#redo tasks 1-5 of the NEA to ensure continuity.
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
+#get buildings to display on the screen as they should- seperate blit function below checkered screen call
+#implemest shortest path as a way to confirm a miner and an assembler are connected 
+#actuak functions of buildings, like what do they make/produce???
+#actuak functions of storage and producers, like crates and containers???
+#some use for the inventory??
 
 #===============================================================================
 #Modules being imported
@@ -22,6 +26,7 @@ import random
 import math
 import re
 import time
+import heapq
 
 #===============================================================================
 #parameters
@@ -199,14 +204,7 @@ def player_render():
             if event.type == pygame.QUIT:  #checks if the program is quit
                 run = False
 
-        keys = pygame.key.get_pressed() #checks the keys being pressed 
-        
-        checkered_background()
-        charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
-        screen.blit(charachter, (x, y)) #displays the image of the player
-        mainPlayerInventory(playerInventory) #initialises the player inventory
-        pygame.display.flip()
-        #camera_follow()
+        keys = pygame.key.get_pressed() #checks the keys being pressed
         
         
         if keys[pygame.K_a]:
@@ -236,46 +234,7 @@ def player_render():
         
         left, middle, right = pygame.mouse.get_pressed()
         if left:
-            print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
-            #getMouseXY()
-            x1,y1 = pygame.mouse.get_pos()
-            x_over = x1 % 32 
-            x_building_pos = x1 - x_over
-            y_over = y1 % 32
-            y_building_pos = y1 - y_over
-
-            print("Y-Position = ", y_building_pos)
-            print("X-Position = ", x_building_pos)
-
-            print("Currrent Building Locations: ", buildingCoordinates)
-            print("current Belt Locations = ", beltCoordinates)
-
-            if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates) or (y_building_pos in beltCoordinates and x_building_pos in beltCoordinates):
-                print("Building already here!")
-            else:
-                buildingCoordinates.append(x_building_pos)
-                buildingCoordinates.append(y_building_pos)
-
-                building_function = askFunction()
-                
-
-
-                if building_function == "assembler":
-                    building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
-                    screen.blit(building, (x_building_pos, y_building_pos))
-                    pygame.display.flip()
-                    
-                        
-        
-                elif building_function == "miner":
-                    miner = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
-                    screen.blit(miner, (x_building_pos, y_building_pos))
-                    pygame.display.flip()
-                    
-
-                else:
-                    print("Invalid entry!")
-                    askFunction()
+            buildingFunction()
 
         if right:
             time.sleep(0.3)
@@ -285,7 +244,12 @@ def player_render():
             time.sleep(0.3)
             removeBuildingOrBelt()
 
+        checkered_background()
+        charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
+        screen.blit(charachter, (x, y)) #displays the image of the player
+        mainPlayerInventory(playerInventory) #initialises the player inventory
         pygame.display.flip()
+        #camera_follow()
 
         
 
@@ -392,7 +356,48 @@ def getMouseXY():
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
-beltCoordinates = []
+
+def buildingFunction():
+    print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
+    #getMouseXY()
+    x1,y1 = pygame.mouse.get_pos()
+    x_over = x1 % 32 
+    x_building_pos = x1 - x_over
+    y_over = y1 % 32
+    y_building_pos = y1 - y_over
+
+    print("Y-Position = ", y_building_pos)
+    print("X-Position = ", x_building_pos)
+
+    print("Currrent Building Locations: ", buildingCoordinates)
+
+    if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates):
+        print("Building already here!")
+    else:
+        buildingCoordinates.append(x_building_pos)
+        buildingCoordinates.append(y_building_pos)
+
+        building_function = askFunction()
+                
+
+
+        if building_function == "assembler":
+            building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
+            screen.blit(building, (x_building_pos, y_building_pos))
+            pygame.display.flip()
+                    
+                        
+        
+        elif building_function == "miner":
+            miner = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
+            screen.blit(miner, (x_building_pos, y_building_pos))
+            pygame.display.flip()
+                    
+
+        else:
+            print("Invalid entry!")
+            askFunction()
+
 
 #===============================================================================
 #ask function
@@ -417,13 +422,12 @@ def beltPlacement():
     print("X-Position = ", x_belt_pos)
 
     print("Currrent Building Locations: ", buildingCoordinates)
-    print("Current Belt Coordinates: ", beltCoordinates)
 
-    if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates) or (y_belt_pos in beltCoordinates and x_belt_pos in beltCoordinates):
+    if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates):
         print("Building already here!")
     else:
-        beltCoordinates.append(x_belt_pos)
-        beltCoordinates.append(y_belt_pos)
+        buildingCoordinates.append(x_belt_pos)
+        buildingCoordinates.append(y_belt_pos)
 
         belt = pygame.image.load(os.path.join("assets", "belt_tier_1.PNG"))
         screen.blit(belt, (x_belt_pos, y_belt_pos))
@@ -447,7 +451,7 @@ def databaseConnect():
     
 def databaseAppendMain():
 
-    curs.execute("INSERT INTO logindata VALUES ('test','test')")
+    curs.execute("INSERT INTO logindata VALUES ('test', 'test')")
 
 
 
@@ -530,17 +534,53 @@ def removeBuildingOrBelt():
     print("X-Position to be removed= ", x_thing_pos)
 
     buildingCoordinates.remove(x_thing_pos)
-    beltCoordinates.remove(x_thing_pos)
     print("X Co-ordinate removed")
     buildingCoordinates.remove(y_thing_pos)
-    beltCoordinates.remove(y_thing_pos)
     print("Both Co-ordinates removed successfuly")
 
 #===============================================================================
 #djikstras shortest path?
 #===============================================================================
+graph = {coord: [other_coord for other_coord in buildingCoordinates if other_coord != coord] for coord in buildingCoordinates}
 
+def distance(coord1, coord2):
+    return ((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2) ** 0.5
 
+def shortest_path(graph, start, end):
+    # Initialize distances dictionary with infinite distances for all nodes
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+
+    # Priority queue to keep track of the next node to visit
+    priority_queue = [(0, start)]
+
+    while priority_queue:
+        current_distance, current_node = heapq.heappop(priority_queue)
+
+        # If the current node has already been visited with a shorter distance, skip it
+        if current_distance > distances[current_node]:
+            continue
+
+        # Check neighbors of the current node
+        for neighbor in graph[current_node]:
+            distance_to_neighbor = distances[current_node] + distance(current_node, neighbor)
+
+            # If a shorter path is found to the neighbor, update the distance
+            if distance_to_neighbor < distances[neighbor]:
+                distances[neighbor] = distance_to_neighbor
+                heapq.heappush(priority_queue, (distance_to_neighbor, neighbor))
+
+    # Reconstruct the path from end to start
+    path = []
+    current_node = end
+    while current_node != start:
+        path.insert(0, current_node)
+        current_node = min(graph[current_node], key=lambda node: distances[node])
+
+    # Include the starting node in the path
+    path.insert(0, start)
+
+    return path
 
 #===============================================================================
 #building connectivity
