@@ -1,7 +1,7 @@
 #pip3 install pygame -pre
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
-#get buildings to display on the screen as they should- seperate blit function below checkered screen call
+#buildings are displaying, but lists are not being searched properly ygm??
 #implemest shortest path as a way to confirm a miner and an assembler are connected 
 #actuak functions of buildings, like what do they make/produce???
 #actuak functions of storage and producers, like crates and containers???
@@ -245,14 +245,58 @@ def player_render():
             removeBuildingOrBelt()
 
         checkered_background()
+        time.sleep(0.3)
+        buildingRender()
         charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
         screen.blit(charachter, (x, y)) #displays the image of the player
         mainPlayerInventory(playerInventory) #initialises the player inventory
         pygame.display.flip()
         #camera_follow()
 
-        
+#===============================================================================
+#Building Render
+#===============================================================================        
+def buildingRender():
+    maxlen1 = len(buildingCoordinates)
+    maxlen2 = len(beltCoordinates)
 
+    for i in range(0, maxlen1):
+        x4 = 0
+        y4 = 1
+        if ((x4 or y4) > maxlen1) or ((x4 or y4) < maxlen1):
+
+            x_coord = buildingCoordinates[x4]
+            y_coord = buildingCoordinates[y4]
+
+            image = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
+            screen.blit(image, (x_coord, y_coord))
+
+            x4 += 2
+            y4 += 2
+
+        else:
+            print("No more buildings to render")
+
+    for i in range(0, maxlen2):
+        x5 = 0
+        y5 = 1
+        if ((x5 or y5) > maxlen2) or ((x5 or y5) < maxlen2):
+            x5 = 0
+            y5 = 1
+
+            x_coord = beltCoordinates[x5]
+            y_coord = beltCoordinates[y5]
+
+            image = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
+            screen.blit(image, (x_coord, y_coord))
+
+            x5 += 2
+            y5 += 2
+
+        else:
+            print("No more belts to render")
+    
+    pygame.display.flip()
 #===============================================================================
 #tkinter text input window class
 #===============================================================================
@@ -356,6 +400,7 @@ def getMouseXY():
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
+beltCoordinates = []
 
 def buildingFunction():
     print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
@@ -371,7 +416,7 @@ def buildingFunction():
 
     print("Currrent Building Locations: ", buildingCoordinates)
 
-    if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates):
+    if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates) or (y_building_pos in beltCoordinates and x_building_pos in beltCoordinates):
         print("Building already here!")
     else:
         buildingCoordinates.append(x_building_pos)
@@ -423,7 +468,7 @@ def beltPlacement():
 
     print("Currrent Building Locations: ", buildingCoordinates)
 
-    if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates):
+    if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates) or (y_belt_pos in beltCoordinates and x_belt_pos in beltCoordinates):
         print("Building already here!")
     else:
         buildingCoordinates.append(x_belt_pos)
@@ -432,6 +477,38 @@ def beltPlacement():
         belt = pygame.image.load(os.path.join("assets", "belt_tier_1.PNG"))
         screen.blit(belt, (x_belt_pos, y_belt_pos))
         pygame.display.flip()
+
+
+#===============================================================================
+#remove building or belt
+#===============================================================================
+def removeBuildingOrBelt():
+    #getMouseXY()
+    x3,y3 = pygame.mouse.get_pos()
+    x_over = x3 % 32 
+    x_thing_pos = x3 - x_over
+    y_over = y3 % 32
+    y_thing_pos = y3 - y_over
+
+    print("Y-Position to be removed = ", y_thing_pos)
+    print("X-Position to be removed= ", x_thing_pos)
+
+    
+    if y_thing_pos in buildingCoordinates:
+        buildingCoordinates.remove(y_thing_pos)
+    elif y_thing_pos in beltCoordinates:
+        beltCoordinates.remove(y_thing_pos)
+    else:
+        print("no Y-coordinate")
+
+    if x_thing_pos in buildingCoordinates:
+        buildingCoordinates.remove(x_thing_pos)
+    elif x_thing_pos in beltCoordinates:
+        beltCoordinates.remove(x_thing_pos)
+    else:
+        print("no X-Coordinate")
+
+
 
 #===============================================================================
 #goofy ahh database
@@ -519,24 +596,6 @@ frame.pack()
 
 window.mainloop()
 
-#===============================================================================
-#remove building or belt
-#===============================================================================
-def removeBuildingOrBelt():
-    #getMouseXY()
-    x3,y3 = pygame.mouse.get_pos()
-    x_over = x3 % 32 
-    x_thing_pos = x3 - x_over
-    y_over = y3 % 32
-    y_thing_pos = y3 - y_over
-
-    print("Y-Position to be removed = ", y_thing_pos)
-    print("X-Position to be removed= ", x_thing_pos)
-
-    buildingCoordinates.remove(x_thing_pos)
-    print("X Co-ordinate removed")
-    buildingCoordinates.remove(y_thing_pos)
-    print("Both Co-ordinates removed successfuly")
 
 #===============================================================================
 #djikstras shortest path?
@@ -583,9 +642,8 @@ def shortest_path(graph, start, end):
     return path
 
 #===============================================================================
-#building connectivity
+#building render
 #===============================================================================
-
 
 
 #===============================================================================
