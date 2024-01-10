@@ -1,11 +1,10 @@
 #pip3 install pygame -pre
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
-#buildings are displaying, but lists are not being searched properly ygm??
-#implemest shortest path as a way to confirm a miner and an assembler are connected 
-#actuak functions of buildings, like what do they make/produce???
-#actuak functions of storage and producers, like crates and containers???
-#some use for the inventory??
+#[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
+#[] - implement shortest path to identify what assembler is connected to what miner??
+#[] - Database not working, need to fix??
+#[] - music?
 
 #===============================================================================
 #Modules being imported
@@ -237,11 +236,9 @@ def player_render():
             buildingFunction()
 
         if right:
-            time.sleep(0.3)
             beltPlacement() #allows belt to be placed
 
         if middle:
-            time.sleep(0.3)
             removeBuildingOrBelt()
 
         checkered_background()
@@ -640,10 +637,6 @@ def shortest_path(graph, start, end):
     path.insert(0, start)
 
     return path
-
-#===============================================================================
-#building render
-#===============================================================================
 
 
 #===============================================================================
