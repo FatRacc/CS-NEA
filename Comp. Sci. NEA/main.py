@@ -2,9 +2,9 @@
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
 #[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
-#[] - keypress -> shortest path between user inputted nodes(clicked on screen)
+#[] - keypress -> shortest path between user inputted nodes(clicked on screen) (can admit defeat)
 #[] - Database not working, need to fix??
-#[] - 
+#[] - COMMENT THE ENTIRE CODE PIECE
 
 #===============================================================================
 #Modules being imported
