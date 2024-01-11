@@ -2,9 +2,9 @@
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
 #[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
-#[] - implement shortest path to identify what assembler is connected to what miner??
+#[] - keypress -> shortest path between user inputted nodes(clicked on screen)
 #[] - Database not working, need to fix??
-#[] - music?
+#[] - 
 
 #===============================================================================
 #Modules being imported
@@ -226,6 +226,10 @@ def player_render():
             camera_follow()
             print("down")
 
+        if keys[pygame.K_e]:
+            shortestPathInitial()
+            print("shortest path calcuator activated")
+
         if keys[pygame.K_ESCAPE]:
             print("returned to main menu") #returns to the main menu
             main_menu()
@@ -243,7 +247,7 @@ def player_render():
 
         checkered_background()
         time.sleep(0.3)
-        buildingRender()
+        #buildingRender()
         charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
         screen.blit(charachter, (x, y)) #displays the image of the player
         mainPlayerInventory(playerInventory) #initialises the player inventory
@@ -301,6 +305,77 @@ import tkinter as tk
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
+
+#===============================================================================
+#shortest path
+#===============================================================================
+def shortestPathInitial():
+
+    left, middle, right = pygame.mouse.get_pressed()
+
+    
+    if left:
+        initialposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")
+        
+        if initialposition == "start":
+
+            x6,y6 = pygame.mouse.get_pos()
+
+            x_over6 = x6 % 32
+            x_building_pos6 = x6 - x_over6
+            y_over6 = y6 % 32
+            y_building_pos6 = y6 - y_over6
+
+            print("Initial Y-Position = ", y_building_pos6)
+            print("Initial X-Position = ", x_building_pos6)
+
+            shortestPathSecondary(x_building_pos6, y_building_pos6)
+        else:
+            print("Incorrect input, try again.")
+            shortestPathInitial()
+            
+        
+def shortestPathSecondary(x6, y6):
+
+    if left:
+        finalposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")
+        
+        if finalposition == "start":
+
+            x7,y7 = pygame.mouse.get_pos()
+
+            x_over7 = x7 % 32
+            x_building_pos7 = x7 - x_over7
+            y_over7 = y7 % 32
+            y_building_pos7 = y7 - y_over7
+
+            print("final Y-Position = ", y_building_pos7)
+            print("Final X-Position = ", x_building_pos7)
+
+            x7 = x_building_pos7
+            y7 = y_building_pos7
+            print("works!!")
+            #shortest_path(x6, y6, x7, y7)
+        else:
+            print("Incorrect input, try again.")
+            shortestPathInitial
+
+
+            
+            
+            
+            
+#plug into djikstras algorithm
+#print outoput
+
+
+
+
+
+
+
+
+
 
 
 
@@ -597,7 +672,8 @@ window.mainloop()
 #===============================================================================
 #djikstras shortest path?
 #===============================================================================
-graph = {coord: [other_coord for other_coord in buildingCoordinates if other_coord != coord] for coord in buildingCoordinates}
+graph = {coord: [other_coord for other_coord in buildingCoordinates or beltCoordinates if other_coord != coord] for coord in buildingCoordinates or beltCoordinates}
+
 
 def distance(coord1, coord2):
     return ((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2) ** 0.5
