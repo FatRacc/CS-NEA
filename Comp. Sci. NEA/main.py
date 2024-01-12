@@ -2,9 +2,9 @@
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
 #[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
-#[] - keypress -> shortest path between user inputted nodes(clicked on screen) (can admit defeat)
+#[] - keypress -> shortest path between user inputted nodes(clicked on screen)
 #[] - Database not working, need to fix??
-#[] - COMMENT THE ENTIRE CODE PIECE
+#[] - 
 
 #===============================================================================
 #Modules being imported
@@ -337,6 +337,8 @@ def shortestPathInitial():
         
 def shortestPathSecondary(x6, y6):
 
+    left, middle, right = pygame.mouse.get_pressed()
+
     if left:
         finalposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")
         
@@ -355,29 +357,10 @@ def shortestPathSecondary(x6, y6):
             x7 = x_building_pos7
             y7 = y_building_pos7
             print("works!!")
-            #shortest_path(x6, y6, x7, y7)
+            dijkstra(x6, y6, x7, y7)
         else:
             print("Incorrect input, try again.")
-            shortestPathInitial
-
-
-            
-            
-            
-            
-#plug into djikstras algorithm
-#print outoput
-
-
-
-
-
-
-
-
-
-
-
+            shortestPathInitial()
 
 
 #===============================================================================
@@ -587,32 +570,90 @@ def removeBuildingOrBelt():
 #===============================================================================
 #connect main database
     
-conn = sqlite3.connect('main.db')
-curs = conn.cursor()
+conn = sqlite3.connect('user_data.db')
+c = conn.cursor()
 
 def databaseConnect():
-
-    curs.execute("""CREATE TABLE IF NOT EXISTS logindata (
-                    username text,
-                    password text,
-                    primary key(username)
-                    )""")
     
-def databaseAppendMain():
 
-    curs.execute("INSERT INTO logindata VALUES ('test', 'test')")
+    # Create Usernames table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS Usernames (
+            user_id INTEGER PRIMARY KEY,
+            username TEXT NOT NULL UNIQUE
+        )
+    ''')
 
+    # Create Passwords table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS Passwords (
+            user_id INTEGER PRIMARY KEY,
+            password TEXT NOT NULL
+        )
+    ''')
 
+    # Create UserIDs table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS UserIDs (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT
+        )
+    ''')
 
-def databaseSearch(field):
+    conn.commit()
+    conn.close()
 
-    curs.execute("SELECT * FROM logindata")
-    
-    myresult = curs.fetchall()
-    
-    for x in myresult:
-        if x == field:
-            return x
+# Function to insert data into tables
+def databaseAppendMain(username, password):
+    conn = sqlite3.connect('user_data.db')
+    c = conn.cursor()
+
+    # Insert username into Usernames table
+    c.execute('''
+        INSERT INTO Usernames (username)
+        VALUES (?)
+    ''', (username,))
+
+    # Get the user_id assigned to the inserted username
+    user_id = c.lastrowid
+
+    # Insert password and user_id into Passwords table
+    c.execute('''
+        INSERT INTO Passwords (user_id, password)
+        VALUES (?, ?)
+    ''', (user_id, password))
+
+    conn.commit()
+    conn.close()
+
+# Function to find username and password
+def databaseSearch(username):
+    conn = sqlite3.connect('user_data.db')
+    c = conn.cursor()
+
+    # Find user_id for the given username
+    c.execute('''
+        SELECT user_id FROM Usernames
+        WHERE username = ?
+    ''', (username,))
+
+    result = c.fetchone()
+
+    if result:
+        user_id = result[0]
+
+        # Find password for the given user_id
+        c.execute('''
+            SELECT password FROM Passwords
+            WHERE user_id = ?
+        ''', (user_id,))
+
+        password = c.fetchone()[0]
+        conn.close()
+
+        return username, password
+
+    conn.close()
+    return None  # Return None if username not found
 
 
 
@@ -627,8 +668,10 @@ window.configure(bg='#333333')
 
 
 def login():
+    username = "master"
+    password = "password"
     databaseConnect()
-    databaseAppendMain()
+    databaseAppendMain(username, password)
     
     master_username = "muser"
     master_password = "mpass"
@@ -672,45 +715,51 @@ window.mainloop()
 #===============================================================================
 #djikstras shortest path?
 #===============================================================================
-graph = {coord: [other_coord for other_coord in buildingCoordinates or beltCoordinates if other_coord != coord] for coord in buildingCoordinates or beltCoordinates}
+def dijkstra(grid, start, end):
+    rows, cols = len(grid), len(grid[0])
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
+    # Helper function to check if a cell is within the grid
+    def is_valid(x, y):
+        return 0 <= x < rows and 0 <= y < cols
 
-def distance(coord1, coord2):
-    return ((coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2) ** 0.5
-
-def shortest_path(graph, start, end):
-    # Initialize distances dictionary with infinite distances for all nodes
-    distances = {node: float('infinity') for node in graph}
-    distances[start] = 0
-
-    # Priority queue to keep track of the next node to visit
+    # Priority queue to store nodes with their respective costs
     priority_queue = [(0, start)]
+    heapq.heapify(priority_queue)
+
+    # Dictionary to store the cost of reaching each node from the start node
+    cost_dict = {start: 0}
 
     while priority_queue:
-        current_distance, current_node = heapq.heappop(priority_queue)
+        current_cost, current_node = heapq.heappop(priority_queue)
 
-        # If the current node has already been visited with a shorter distance, skip it
-        if current_distance > distances[current_node]:
-            continue
+        if current_node == end:
+            break
 
-        # Check neighbors of the current node
-        for neighbor in graph[current_node]:
-            distance_to_neighbor = distances[current_node] + distance(current_node, neighbor)
+        for dx, dy in directions:
+            new_x, new_y = current_node[0] + dx, current_node[1] + dy
 
-            # If a shorter path is found to the neighbor, update the distance
-            if distance_to_neighbor < distances[neighbor]:
-                distances[neighbor] = distance_to_neighbor
-                heapq.heappush(priority_queue, (distance_to_neighbor, neighbor))
+            if is_valid(new_x, new_y):
+                new_cost = current_cost + grid[new_x][new_y]
 
-    # Reconstruct the path from end to start
+                if (new_x, new_y) not in cost_dict or new_cost < cost_dict[(new_x, new_y)]:
+                    cost_dict[(new_x, new_y)] = new_cost
+                    heapq.heappush(priority_queue, (new_cost, (new_x, new_y)))
+
+    # Reconstruct the path
     path = []
     current_node = end
-    while current_node != start:
-        path.insert(0, current_node)
-        current_node = min(graph[current_node], key=lambda node: distances[node])
 
-    # Include the starting node in the path
-    path.insert(0, start)
+    while current_node != start:
+        path.append(current_node)
+        for dx, dy in directions:
+            prev_node = (current_node[0] - dx, current_node[1] - dy)
+            if is_valid(prev_node[0], prev_node[1]) and cost_dict.get(prev_node, float('inf')) == cost_dict[current_node] - grid[prev_node[0]][prev_node[1]]:
+                current_node = prev_node
+                break
+
+    path.append(start)
+    path.reverse()
 
     return path
 
