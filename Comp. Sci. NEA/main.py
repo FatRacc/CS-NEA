@@ -2,9 +2,9 @@
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
 #[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
-#[] - keypress -> shortest path between user inputted nodes(clicked on screen)
-#[] - Database not working, need to fix??
-#[] - 
+#[COMPLETED] - keypress -> shortest path between user inputted nodes(clicked on screen)
+#[COMPLATED] - Database not working, need to fix??
+#[COMPLAETED] - shortest path implement
 
 #===============================================================================
 #Modules being imported
@@ -88,7 +88,7 @@ def play():
 
 def options():
   while True:
-      OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+      OPTIONS_MOUSE_POS = pygame.mouse.get_pos() #get mouse position
 
 
 
@@ -98,7 +98,7 @@ def options():
 
 
 
-      OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
+      OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black") #render the options screen text
       OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
       screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
@@ -106,7 +106,7 @@ def options():
 
 
       OPTIONS_BACK = Button(image=None, pos=(640, 460),
-                          text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+                          text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green") # display the back button within the options
 
 
 
@@ -122,8 +122,8 @@ def options():
               pygame.quit()
               sys.exit()
           if event.type == pygame.MOUSEBUTTONDOWN:
-              if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                  main_menu()
+              if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS): #checks for mouse button presses
+                  main_menu() #calls the main menu if so
 
 
 
@@ -135,27 +135,27 @@ def options():
 
 def main_menu():
   while True:
-      screen.blit(BG, (0, 0))
+      screen.blit(BG, (0, 0)) #blackout the screen
 
 
 
 
-      MENU_MOUSE_POS = pygame.mouse.get_pos()
+      MENU_MOUSE_POS = pygame.mouse.get_pos()# gets mouse position on the menu screen
 
 
 
 
-      MENU_TEXT = get_font(100).render("FACTORY GAME", True, "#b68f40")
-      MENU_RECT = MENU_TEXT.get_rect(center=(675, 100))
+      MENU_TEXT = get_font(100).render("FACTORY GAME", True, "#b68f40")# maim menu text
+      MENU_RECT = MENU_TEXT.get_rect(center=(675, 100))# location of main menu text
 
 
 
 
-      PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 250),
+      PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 250), # draws the play button on the screen
                           text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-      OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(640, 400),
+      OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(640, 400), # draws the options button on the screen
                           text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-      QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 550),
+      QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 550),# draws the quit button on the screen
                           text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
 
@@ -168,7 +168,7 @@ def main_menu():
 
       for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
           button.changeColor(MENU_MOUSE_POS)
-          button.update(screen)
+          button.update(screen) #updates the buttons on screen depending if hovered or not
     
       for event in pygame.event.get():
           if event.type == pygame.QUIT:
@@ -176,17 +176,17 @@ def main_menu():
               sys.exit()
           if event.type == pygame.MOUSEBUTTONDOWN:
               if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                  play()
+                  play() # checks if the player has clicked play
               if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                  options()
+                  options()#checks if the player has clicked options
               if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                  pygame.quit()
+                  pygame.quit()#checks if the player has clicked quit
                   sys.exit()
 
 
 
 
-      pygame.display.update()
+      pygame.display.update()#updates the display
 
 
 
@@ -195,7 +195,7 @@ def main_menu():
 #charchter render and movement
 #===============================================================================
 def player_render():
-    time.sleep(0.1)
+    time.sleep(0.1)#delays the game slightly 
     x, y = 0, 0  #sets charchter position
     while True:
         
@@ -227,7 +227,7 @@ def player_render():
             print("down")
 
         if keys[pygame.K_e]:
-            shortestPathInitial()
+            shortestPathInitial()#calls the shortest path function
             print("shortest path calcuator activated")
 
         if keys[pygame.K_ESCAPE]:
@@ -237,17 +237,17 @@ def player_render():
         
         left, middle, right = pygame.mouse.get_pressed()
         if left:
-            buildingFunction()
+            buildingFunction()#calls building function
 
         if right:
             beltPlacement() #allows belt to be placed
 
         if middle:
-            removeBuildingOrBelt()
+            removeBuildingOrBelt()#calls the remove building or belt function
 
-        checkered_background()
+        checkered_background()#draws the game background
         time.sleep(0.3)
-        #buildingRender()
+        buildingRender() # renders the buildings
         charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
         screen.blit(charachter, (x, y)) #displays the image of the player
         mainPlayerInventory(playerInventory) #initialises the player inventory
@@ -258,7 +258,7 @@ def player_render():
 #Building Render
 #===============================================================================        
 def buildingRender():
-    maxlen1 = len(buildingCoordinates)
+    maxlen1 = len(buildingCoordinates) #defines the length of the lists and assigns them a variable
     maxlen2 = len(beltCoordinates)
 
     for i in range(0, maxlen1):
@@ -269,14 +269,14 @@ def buildingRender():
             x_coord = buildingCoordinates[x4]
             y_coord = buildingCoordinates[y4]
 
-            image = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
-            screen.blit(image, (x_coord, y_coord))
+            image = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))#loads the images specified in the path
+            screen.blit(image, (x_coord, y_coord))# blits the image onto the screen
 
             x4 += 2
             y4 += 2
 
         else:
-            print("No more buildings to render")
+            print("No more buildings to render")# error handling
 
     for i in range(0, maxlen2):
         x5 = 0
@@ -288,79 +288,85 @@ def buildingRender():
             x_coord = beltCoordinates[x5]
             y_coord = beltCoordinates[y5]
 
-            image = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
-            screen.blit(image, (x_coord, y_coord))
+            image = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))#loads the image specified in the path
+            screen.blit(image, (x_coord, y_coord))#blits the imnage onto the screen
 
             x5 += 2
             y5 += 2
 
         else:
-            print("No more belts to render")
+            print("No more belts to render")# error handling
     
     pygame.display.flip()
 #===============================================================================
 #tkinter text input window class
 #===============================================================================
 import tkinter as tk
-class App(tk.Tk):
+class App(tk.Tk):#class app for tkinter windows
     def __init__(self):
-        super().__init__()
+        super().__init__()#initialises with the super() function
 
 #===============================================================================
 #shortest path
 #===============================================================================
 def shortestPathInitial():
 
-    left, middle, right = pygame.mouse.get_pressed()
+    left, middle, right = pygame.mouse.get_pressed()#checks for the mouse buttons being pressed
 
     
     if left:
-        initialposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")
+        initialposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")#asks for user input
         
-        if initialposition == "start":
+        if initialposition == "start":#checks the user inout
 
             x6,y6 = pygame.mouse.get_pos()
 
+            #coordinate maths
             x_over6 = x6 % 32
             x_building_pos6 = x6 - x_over6
             y_over6 = y6 % 32
             y_building_pos6 = y6 - y_over6
-
+            
+            #value checking
             print("Initial Y-Position = ", y_building_pos6)
             print("Initial X-Position = ", x_building_pos6)
 
+            #calls the next function if all is ok
             shortestPathSecondary(x_building_pos6, y_building_pos6)
         else:
-            print("Incorrect input, try again.")
-            shortestPathInitial()
+            print("Incorrect input, try again.")#error handling
+            shortestPathInitial()# calls the initial functionof errors occur
             
         
 def shortestPathSecondary(x6, y6):
 
-    left, middle, right = pygame.mouse.get_pressed()
+    left, middle, right = pygame.mouse.get_pressed()#checks for mouse button pressed
 
     if left:
-        finalposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")
+        finalposition = tkinter.askstring("Input", "are you selecting the 'start' or 'end' coordinate?")# asks for user inout
         
         if finalposition == "start":
 
             x7,y7 = pygame.mouse.get_pos()
 
+            #coordinate math
             x_over7 = x7 % 32
             x_building_pos7 = x7 - x_over7
             y_over7 = y7 % 32
-            y_building_pos7 = y7 - y_over7
+            y_building_pos7 = y7 - y_over
 
+            #coordinate checking
             print("final Y-Position = ", y_building_pos7)
             print("Final X-Position = ", x_building_pos7)
 
+            #value assignments
             x7 = x_building_pos7
             y7 = y_building_pos7
-            print("works!!")
-            dijkstra(x6, y6, x7, y7)
+            print("works!!")#error and progress checking
+            dijkstra(x6, y6, x7, y7)#calls djikstra function
         else:
-            print("Incorrect input, try again.")
-            shortestPathInitial()
+            print("Incorrect input, try again.")#error checking
+            shortestPathInitial()#restarting the first function
 
 
 #===============================================================================
@@ -447,64 +453,71 @@ def mainPlayerInventory(playerInventory):
 #Mouse x-y coordinate grabber
 #===============================================================================
 def getMouseXY():
-    x1,y1 = pygame.mouse.get_pos()
-    return x1,y1
+    x1,y1 = pygame.mouse.get_pos()#gets mouse coordinates
+    return x1,y1#returns those coordinates
 
 
 #===============================================================================
 #Factory Building Placement
 #===============================================================================
 buildingCoordinates = [] #initialises the list
-beltCoordinates = []
+beltCoordinates = [] #initialises the list
 
 def buildingFunction():
     print("Building placement attempted")#detects if the mouse is clicked and displays a message if so
     #getMouseXY()
+    #coordinate math
     x1,y1 = pygame.mouse.get_pos()
     x_over = x1 % 32 
     x_building_pos = x1 - x_over
     y_over = y1 % 32
     y_building_pos = y1 - y_over
 
+    #checking values
     print("Y-Position = ", y_building_pos)
     print("X-Position = ", x_building_pos)
 
-    print("Currrent Building Locations: ", buildingCoordinates)
+    print("Currrent Building Locations: ", buildingCoordinates)#printing current list values
 
+    #checking if values exist in the list
     if (y_building_pos in buildingCoordinates and x_building_pos in buildingCoordinates) or (y_building_pos in beltCoordinates and x_building_pos in beltCoordinates):
-        print("Building already here!")
+        print("Building already here!")#error handling
     else:
+        #appending coordinates to list
         buildingCoordinates.append(x_building_pos)
         buildingCoordinates.append(y_building_pos)
 
+        #user input
         building_function = askFunction()
                 
 
-
+        #checking building function
         if building_function == "assembler":
-            building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))
-            screen.blit(building, (x_building_pos, y_building_pos))
-            pygame.display.flip()
+            building = pygame.image.load(os.path.join("assets", "machine_assembler_tier_1.PNG"))#loading relevant images
+            screen.blit(building, (x_building_pos, y_building_pos))#getting relevant coordinates
+            pygame.display.flip()#blits the image onto the screen
                     
                         
-        
+        #checking building function
         elif building_function == "miner":
-            miner = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))
-            screen.blit(miner, (x_building_pos, y_building_pos))
-            pygame.display.flip()
+            miner = pygame.image.load(os.path.join("assets", "machine_miner_tier_1.PNG"))#loading releveant image
+            screen.blit(miner, (x_building_pos, y_building_pos))# getting relevant coordinates
+            pygame.display.flip()#blits thye image onto the screen
                     
 
         else:
+            #error handling
             print("Invalid entry!")
-            askFunction()
+            askFunction()#calling the function again
 
 
 #===============================================================================
 #ask function
 #===============================================================================
 def askFunction():
+    #asking for user input
     building_function = askstring("Input", "Would you like this building to be an 'assembler' or a 'miner'")
-    return building_function
+    return building_function #returning the user input.
 
 
 #===============================================================================
@@ -512,26 +525,32 @@ def askFunction():
 #===============================================================================
 def beltPlacement():
     #getMouseXY()
+
+    #coordinate mathy
     x2,y2 = pygame.mouse.get_pos()
     x_over = x2 % 32 
     x_belt_pos = x2 - x_over
     y_over = y2 % 32
     y_belt_pos = y2 - y_over
 
+    #value checking
     print("Y-Position = ", y_belt_pos)
     print("X-Position = ", x_belt_pos)
 
+    #prints the current list
     print("Currrent Building Locations: ", buildingCoordinates)
 
+    checking for values in the list alrady
     if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates) or (y_belt_pos in beltCoordinates and x_belt_pos in beltCoordinates):
-        print("Building already here!")
+        print("Building already here!")#error handling
     else:
+        #appending values to the list
         buildingCoordinates.append(x_belt_pos)
         buildingCoordinates.append(y_belt_pos)
 
-        belt = pygame.image.load(os.path.join("assets", "belt_tier_1.PNG"))
-        screen.blit(belt, (x_belt_pos, y_belt_pos))
-        pygame.display.flip()
+        belt = pygame.image.load(os.path.join("assets", "belt_tier_1.PNG"))#loads the relevant image
+        screen.blit(belt, (x_belt_pos, y_belt_pos))#blits ontp the screen
+        pygame.display.flip()#updates the scren
 
 
 #===============================================================================
@@ -539,29 +558,32 @@ def beltPlacement():
 #===============================================================================
 def removeBuildingOrBelt():
     #getMouseXY()
+
+    #coordinate math
     x3,y3 = pygame.mouse.get_pos()
     x_over = x3 % 32 
     x_thing_pos = x3 - x_over
     y_over = y3 % 32
     y_thing_pos = y3 - y_over
 
+    #value checking
     print("Y-Position to be removed = ", y_thing_pos)
     print("X-Position to be removed= ", x_thing_pos)
 
-    
+    #checking for values in lists
     if y_thing_pos in buildingCoordinates:
-        buildingCoordinates.remove(y_thing_pos)
+        buildingCoordinates.remove(y_thing_pos)# removes the values
     elif y_thing_pos in beltCoordinates:
-        beltCoordinates.remove(y_thing_pos)
+        beltCoordinates.remove(y_thing_pos)# removes the values
     else:
-        print("no Y-coordinate")
+        print("no Y-coordinate")#error handling
 
     if x_thing_pos in buildingCoordinates:
-        buildingCoordinates.remove(x_thing_pos)
+        buildingCoordinates.remove(x_thing_pos)# removes the values
     elif x_thing_pos in beltCoordinates:
-        beltCoordinates.remove(x_thing_pos)
+        beltCoordinates.remove(x_thing_pos)# removes the values
     else:
-        print("no X-Coordinate")
+        print("no X-Coordinate")# error handling
 
 
 
@@ -660,6 +682,7 @@ def databaseSearch(username):
 #===============================================================================
 # Login system
 #===============================================================================
+#tkinter window defining
 window = tk.Tk()
 window.title("Login form")
 window.geometry('340x440')
@@ -668,23 +691,23 @@ window.configure(bg='#333333')
 
 
 def login():
-    username = "master"
-    password = "password"
-    databaseConnect()
-    databaseAppendMain(username, password)
+    username = "master" #defines username
+    password = "password" # defines password
+    databaseConnect() #cnnects the database
+    databaseAppendMain(username, password)# appends the main values to the database
     
-    master_username = "muser"
-    master_password = "mpass"
-    if username_entry.get()==master_username and password_entry.get()==master_password:
-        messagebox.showinfo(title="Login Success", message="You successfully logged in.")
-        main_menu()
-    elif username_entry.get() == databaseSearch(username_entry.get()) and password_entry.get() == databaseSearch(password_entry.get()):
-        messagebox.showinfo(title="Login Success", message="You successfully logged in.")
-        main_menu()
+    master_username = "muser" #defines the master username
+    master_password = "mpass" #defines the master password
+    if username_entry.get()==master_username and password_entry.get()==master_password:#checks user entry for mater credentials
+        messagebox.showinfo(title="Login Success", message="You successfully logged in.")#message if correct
+        main_menu()#maine manu function
+    elif username_entry.get() == databaseSearch(username_entry.get()) and password_entry.get() == databaseSearch(password_entry.get()):#checks user credientials in the database
+        messagebox.showinfo(title="Login Success", message="You successfully logged in.")#message f correct
+        main_menu()#main menu function
     else:
-        messagebox.showerror(title="Error", message="Invalid login.")
+        messagebox.showerror(title="Error", message="Invalid login.")#error handling
 
-frame = tkinter.Frame(bg='#333333')
+frame = tkinter.Frame(bg='#333333')#frame size
 
 
 # Creating widgets
@@ -709,15 +732,15 @@ login_button.grid(row=3, column=0, columnspan=2, pady=30)
 
 frame.pack()
 
-window.mainloop()
+window.mainloop()#loops the main window. similar to the screen.blit() function in pygame but for tkinter modules and fron the App class instead
 
 
 #===============================================================================
 #djikstras shortest path?
 #===============================================================================
 def dijkstra(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    rows, cols = len(grid), len(grid[0]) #defines rows and columns
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)] #defines directions on the grid
 
     # Helper function to check if a cell is within the grid
     def is_valid(x, y):
@@ -768,7 +791,7 @@ def dijkstra(grid, start, end):
 #Main function
 #===============================================================================
 def program_start():
-    login()
+    login()#calls the login window
     pygame.quit()#checks if the program is closed down or quit
 
 
