@@ -34,7 +34,7 @@ pygame.init() #initialising pygame
 
 fps = 60
 fpsClock = pygame.time.Clock()
-screen = pygame.display.set_mode((1280, 704))
+screen = pygame.display.set_mode((1920, 1080))
 color = (255,255,255)
 colorLight = (170,170,170)
 colorDark = (100,100,100)
@@ -70,7 +70,7 @@ def backgroundDisplay():
 #===============================================================================
 # main menu
 #===============================================================================
-BG = pygame.image.load("assets/Background.jpg")
+BG = pygame.image.load("assets/Background.jpeg")
 
 
 
@@ -93,20 +93,20 @@ def options():
 
 
 
-      screen.fill("white")
+      screen.blit(BG, (0, 0)) #blackout the screen
 
 
 
 
-      OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black") #render the options screen text
-      OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+      OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "White") #render the options screen text
+      OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(950, 260))
       screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
 
 
 
-      OPTIONS_BACK = Button(image=None, pos=(640, 460),
-                          text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green") # display the back button within the options
+      OPTIONS_BACK = Button(image=None, pos=(950, 460),
+                          text_input="BACK", font=get_font(75), base_color="White", hovering_color="Green") # display the back button within the options
 
 
 
@@ -146,16 +146,16 @@ def main_menu():
 
 
       MENU_TEXT = get_font(100).render("FACTORY GAME", True, "#b68f40")# maim menu text
-      MENU_RECT = MENU_TEXT.get_rect(center=(675, 100))# location of main menu text
+      MENU_RECT = MENU_TEXT.get_rect(center=(950, 100))# location of main menu text
 
 
 
 
-      PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 250), # draws the play button on the screen
+      PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(950, 250), # draws the play button on the screen
                           text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-      OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(640, 400), # draws the options button on the screen
+      OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(950, 400), # draws the options button on the screen
                           text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-      QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 550),# draws the quit button on the screen
+      QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(950, 550),# draws the quit button on the screen
                           text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
 
@@ -196,7 +196,7 @@ def main_menu():
 #===============================================================================
 def player_render():
     time.sleep(0.1)#delays the game slightly 
-    x, y = 0, 0  #sets charchter position
+    x, y = 75, 75  #sets charchter position
     while True:
         
         for event in pygame.event.get():
@@ -245,8 +245,18 @@ def player_render():
         if middle:
             removeBuildingOrBelt()#calls the remove building or belt function
 
+        if x >= 1920:
+            x = 5
+        elif x <= 0:
+            x = 1915
+
+        if y >= 1080:
+            y = 5
+        elif y <= 0:
+            y = 1075
+
         checkered_background()#draws the game background
-        time.sleep(0.3)
+        time.sleep(0.05)
         buildingRender() # renders the buildings
         charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
         screen.blit(charachter, (x, y)) #displays the image of the player
@@ -353,7 +363,7 @@ def shortestPathSecondary(x6, y6):
             x_over7 = x7 % 32
             x_building_pos7 = x7 - x_over7
             y_over7 = y7 % 32
-            y_building_pos7 = y7 - y_over
+            y_building_pos7 = y7 - y_over7
 
             #coordinate checking
             print("final Y-Position = ", y_building_pos7)
@@ -375,7 +385,7 @@ def shortestPathSecondary(x6, y6):
 def checkered_background():
     square_size = 32 #defines the sqaure size
     width = 1920
-    height = 1080
+    height = 1200
     for row in range(height // square_size):
         for column in range(width // square_size):
             x = column * square_size  # math for calculating the squares
@@ -540,7 +550,7 @@ def beltPlacement():
     #prints the current list
     print("Currrent Building Locations: ", buildingCoordinates)
 
-    checking for values in the list alrady
+    #checking for values in the list alrady
     if (y_belt_pos in buildingCoordinates and x_belt_pos in buildingCoordinates) or (y_belt_pos in beltCoordinates and x_belt_pos in beltCoordinates):
         print("Building already here!")#error handling
     else:
@@ -694,7 +704,7 @@ def login():
     username = "master" #defines username
     password = "password" # defines password
     databaseConnect() #cnnects the database
-    databaseAppendMain(username, password)# appends the main values to the database
+    #databaseAppendMain(username, password)# appends the main values to the database
     
     master_username = "muser" #defines the master username
     master_password = "mpass" #defines the master password
