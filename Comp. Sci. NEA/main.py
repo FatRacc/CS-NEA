@@ -1,10 +1,12 @@
 #pip3 install pygame -pre
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
-#[COMPLETED] - buildings are displaying, but lists are not being searched properly ygm??
-#[COMPLETED] - keypress -> shortest path between user inputted nodes(clicked on screen)
-#[COMPLATED] - Database not working, need to fix??
-#[COMPLAETED] - shortest path implement
+#[]
+#[]
+#[]
+#[]
+#[]
+#[]
 
 #===============================================================================
 #Modules being imported
@@ -391,7 +393,7 @@ def checkered_background():
             x = column * square_size  # math for calculating the squares
             y = row * square_size  
             if (row+column) % 2 == 0:
-                color = (255, 255, 255) #white
+                color = (169, 169, 169) #white
             else:
                 color = (0, 0, 0) #black
             pygame.draw.rect(screen, color, (x, y, square_size, square_size)) #displays the sqaures
