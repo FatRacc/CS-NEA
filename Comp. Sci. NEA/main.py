@@ -1,7 +1,7 @@
 #pip3 install pygame -pre
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
-#[]
+#[building placement list not traversing correctly]
 #[]
 #[]
 #[]
@@ -49,6 +49,9 @@ width = 40
 height = 60
 vel = 2.87
 ALPHA = (0, 255, 0)
+Iron = (192, 192, 192)
+Copper = (184, 115, 51)
+Stone = (277, 203, 165)
 
 
 #===============================================================================
@@ -239,6 +242,7 @@ def player_render():
         
         left, middle, right = pygame.mouse.get_pressed()
         if left:
+            time.sleep(0.05)
             buildingFunction()#calls building function
 
         if right:
@@ -257,8 +261,9 @@ def player_render():
         elif y <= 0:
             y = 1075
 
+        
         checkered_background()#draws the game background
-        time.sleep(0.05)
+        ResourceSpawner()
         buildingRender() # renders the buildings
         charachter = pygame.image.load(os.path.join("assets", "SPRITE1.PNG"))
         screen.blit(charachter, (x, y)) #displays the image of the player
@@ -393,12 +398,36 @@ def checkered_background():
             x = column * square_size  # math for calculating the squares
             y = row * square_size  
             if (row+column) % 2 == 0:
-                color = (169, 169, 169) #white
+                color = (150, 150, 150) #white
             else:
                 color = (0, 0, 0) #black
             pygame.draw.rect(screen, color, (x, y, square_size, square_size)) #displays the sqaures
 
 
+
+#===============================================================================
+#Resource spawners
+#===============================================================================
+def ResourceSpawner():
+
+    x8 = 8 * 32
+    y8 = 6 * 32
+
+    x9 = 34 * 32
+    y9 = 6 * 32
+
+    x10 = 23 * 32
+    y10 = 23 * 32
+
+    IronColor = (192, 192, 192)
+    CopperColor = (184, 115, 51)
+    StoneColor = (255, 203, 165)
+
+    pygame.draw.rect(screen, IronColor, (x8, y8, 64, 64))
+    pygame.draw.rect(screen, CopperColor, (x9, y9, 64, 64))
+    pygame.draw.rect(screen, StoneColor, (x10, y10, 64, 64))
+    
+    pygame.display.flip()
 
 
 #===============================================================================
@@ -797,6 +826,7 @@ def dijkstra(grid, start, end):
     path.reverse()
 
     return path
+
 
 
 #===============================================================================
