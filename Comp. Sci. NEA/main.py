@@ -1,12 +1,15 @@
 #pip3 install pygame -pre
 #https://www.aqa.org.uk/subjects/computer-science-and-it/as-and-a-level/computer-science-7516-7517/subject-content-a-level/non-exam-assessment-the-computing-practical-project
 
-#[building placement list not traversing correctly]
-#[]
-#[]
-#[]
-#[]
-#[]
+#Simple Mathematical Calculations  - (343), (371), (397), (412), (513), (573), (606)
+#Linear Search  -------------------- (525), (278)
+#Simple/Intermediate OOP Model  ----------------- (322), (Button.py file)
+#Stack operations  ----------------- (783 to 839)
+#Recursion for incorrect inputs  --- (356), (387), (466), (553) 
+#Cross table parameterised SQL  ---- (637 to 720)
+#List Operations  ------------------ (279), (466 to 491), (508 to 553), (586), (601 to 628), (815 to 829)
+
+# line numbers may chnage as code is added/tested/updated
 
 #===============================================================================
 #Modules being imported
